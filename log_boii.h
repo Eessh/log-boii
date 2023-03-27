@@ -1,6 +1,10 @@
 #ifndef LOG_BOII
 #define LOG_BOII
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
   * Log levels.
   *
@@ -50,5 +54,9 @@ void log_boii(log_level level,
               int line,
               const char* format_string,
               ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
