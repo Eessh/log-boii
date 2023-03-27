@@ -16,6 +16,17 @@ A simple header only logging library for C/C++ projects.
 [18:25:46] TRACE main:./tests/test.c:13: Cleaning up resources ...
 [18:25:46] INFO  main:./tests/test.c:14: Done.
 ```
+### Colored Output
+Define `LOG_BOII__COLORED_LOGS`
+```bash
+> gcc -DLOG_BOII__COLORED_LOGS log_boii.c tests/test.c -o bin/test
+```
+
+### Colored Highlighted Output for `WARN`, `ERROR`, `FATAL` logs
+Define `LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS` for printing whole log string in respective level's color.
+```bash
+> gcc -DLOG_BOII__COLORED_LOGS -DLOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS log_boii.c tests/test.c -o bin/test
+```
 
 
 ## Usage of Log levels
