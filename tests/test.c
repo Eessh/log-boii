@@ -1,6 +1,7 @@
 #include "../log_boii.h"
 
-int main()
+int
+main()
 {
   log_trace("Initializing Video Subsystem ...");
   log_debug("Video Subsystem initialized.");
