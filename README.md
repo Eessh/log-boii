@@ -1,6 +1,43 @@
 # Log Boii
 A simple header only logging library for C/C++ projects.
 
+![Colored output with highlighted strings](screenshots/colored_output_with_hightlights.png)
+
+## Usage
+Log Levels: `LOG_FATAL`, `LOG_ERROR`, `LOG_WARN`, `LOG_INFO`, `LOG_DEBUG`, `LOG_TRACE`
+
+Simple Logging Functions:
+```c
+void log_fatal(const char* string);
+void log_error(const char* string);
+void log_warn(const char* string);
+void log_info(const char* string);
+void log_debug(const char* string);
+void log_trace(const char* string);
+
+// Example usage
+int main() {
+  log_info("inside main");
+  return 0;
+}
+```
+
+Formatted String Logging Functions:
+```c
+void log_fatal(const char* format_string, ...);
+void log_error(const char* format_string, ...);
+void log_warn(const char* format_string, ...);
+void log_info(const char* format_string, ...);
+void log_debug(const char* format_string, ...);
+void log_trace(const char* format_string, ...);
+
+// Example usage
+int main() {
+  log_info("inside main: %d", 10);
+  return 0;
+}
+```
+
 ## Building
 ```bash
 > gcc log_boii.c tests/test.c -o bin/test
@@ -17,16 +54,22 @@ A simple header only logging library for C/C++ projects.
 [18:25:46] INFO  main:./tests/test.c:14: Done.
 ```
 ### Colored Output
-Define `LOG_BOII__COLORED_LOGS`
+- Colored output is implemented using ASCII Escape Codes, which are supported by all modern terminals, except shitty Windows Command Prompt.
+- Define `LOG_BOII__COLORED_LOGS`
 ```bash
 > gcc -DLOG_BOII__COLORED_LOGS log_boii.c tests/test.c -o bin/test
+> ./bin/test
 ```
+![Colored output](screenshots/colored_output.png)
 
 ### Colored Highlighted Output for `WARN`, `ERROR`, `FATAL` logs
-Define `LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS` for printing whole log string in respective level's color.
+- Colored output is implemented using ASCII Escape Codes, which are supported by all modern terminals, except shitty Windows Command Prompt.
+- Define `LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS` for printing whole log string in respective level's color.
 ```bash
 > gcc -DLOG_BOII__COLORED_LOGS -DLOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS log_boii.c tests/test.c -o bin/test
+> ./bin/test
 ```
+![Colored output with highlighted strings](screenshots/colored_output_with_hightlights.png)
 
 
 ## Usage of Log levels
