@@ -1,6 +1,7 @@
 #include "log_boii.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 #ifdef LOG_BOII__COLORED_LOGS
@@ -35,6 +36,21 @@ log_level_string(log_level level)
       break;
   }
   return "FATAL";
+}
+
+char*
+format_to_2_digits(int n)
+{
+  char* result = (char*)malloc(sizeof(char)*3);
+  result[0] = '0';
+  result[1] = '0';
+  result[2] = '\0';
+  result[1] += n%10;
+  if (n < 10) {
+    return result;
+  }
+  result[0] += n/10;
+  return result;
 }
 
 /*
@@ -73,14 +89,18 @@ log_boii(log_level level,
 {
   struct tm* timeinfo = time_info();
 
+  char* formatted_hour_str = format_to_2_digits(timeinfo->tm_hour);
+  char* formatted_minute_str = format_to_2_digits(timeinfo->tm_min);
+  char* formatted_second_str = format_to_2_digits(timeinfo->tm_sec);
+
 #ifdef LOG_BOII__COLORED_LOGS
   switch (level) {
     case LOG_TRACE: {
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_TRACE "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_TRACE "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -89,10 +109,10 @@ log_boii(log_level level,
     }
     case LOG_DEBUG: {
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_DEBUG "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_DEBUG "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -101,10 +121,10 @@ log_boii(log_level level,
     }
     case LOG_INFO: {
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_INFO "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_INFO "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -114,20 +134,20 @@ log_boii(log_level level,
     case LOG_WARN: {
 #ifdef LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_WARN "%s %s:%s:%d: " COLOR_RESET,
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_WARN "%s %s:%s:%d: " COLOR_RESET,
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
               line);
 #else
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_WARN "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_WARN "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -138,20 +158,20 @@ log_boii(log_level level,
     case LOG_ERROR: {
 #ifdef LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_ERROR "%s %s:%s:%d: " COLOR_RESET,
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_ERROR "%s %s:%s:%d: " COLOR_RESET,
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
               line);
 #else
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_ERROR "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_ERROR "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -162,20 +182,20 @@ log_boii(log_level level,
     case LOG_FATAL: {
 #ifdef LOG_BOII__HIGHLIGHT_WARN_ERROR_FATAL_STRINGS
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_FATAL "%s %s:%s:%d: " COLOR_RESET,
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_FATAL "%s %s:%s:%d: " COLOR_RESET,
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
               line);
 #else
       fprintf(stderr,
-              "[%d:%d:%d] " COLOR_FATAL "%s" COLOR_RESET " %s:%s:%d: ",
-              timeinfo->tm_hour,
-              timeinfo->tm_min,
-              timeinfo->tm_sec,
+              "[%s:%s:%s] " COLOR_FATAL "%s" COLOR_RESET " %s:%s:%d: ",
+              formatted_hour_str,
+              formatted_minute_str,
+              formatted_second_str,
               log_level_string(level),
               function,
               file,
@@ -189,10 +209,10 @@ log_boii(log_level level,
 #else
   // printing usual stuff: time, log level, function, file, line
   fprintf(stderr,
-          "[%d:%d:%d] %s %s:%s:%d: ",
-          timeinfo->tm_hour,
-          timeinfo->tm_min,
-          timeinfo->tm_sec,
+          "[%s:%s:%s] %s %s:%s:%d: ",
+          formatted_hour_str,
+          formatted_minute_str,
+          formatted_second_str,
           log_level_string(level),
           function,
           file,
@@ -218,4 +238,9 @@ log_boii(log_level level,
   va_end(format_args);
 
   fprintf(stderr, "\n");
+
+  // Freeing formatted strings
+  free(formatted_hour_str);
+  free(formatted_minute_str);
+  free(formatted_second_str);
 }
